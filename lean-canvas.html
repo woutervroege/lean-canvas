@@ -1,0 +1,405 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../polymer/lib/mixins/gesture-event-listeners.html">
+
+<dom-module id="lean-canvas">
+  <template>
+    <style>
+      :host {
+        display: block;
+        --border-color: #e0e0e0;
+        --note-fill-color: #FFFF99;
+      }
+
+      :host * {
+        box-sizing: border-box;
+      }
+
+      #container {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-rows: 2.5fr 1fr;
+        background: var(--border-color);
+        font-family: sans-serif;
+        padding: 1px;
+      }
+
+      .row {
+        display: flex;
+      }
+
+      .row > * {
+        background: white;
+      }
+
+      .column {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .two-third > *:nth-child(1) {
+        flex: 1.7;
+        border-bottom: 0;
+      }
+
+      .two-third > *:nth-child(2) {
+        flex: 1;
+        border-top: 0;
+      }
+
+      .row > *,
+      .column > * {
+        flex: 1;
+      }
+
+      section {
+        border: 1px solid var(--border-color);
+        position: relative;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      section:before,
+      section:after {
+        display: block;
+        flex: 0;
+        order: 0;
+      }
+      
+      section:before {
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        content: attr(data-label);
+      }
+
+      section:after {
+        margin: 3px 0 6px 0;
+        font-size: 11px;
+        color: #bbb;
+        font-style: italic;
+        content: attr(data-info);
+      }
+
+      .two-third > *:nth-child(2):before {
+        font-size: 11px;
+      }
+
+      .list {
+        flex: 1;
+        min-width: 100%;
+        order: 1;
+        margin: 0 -12px;
+        list-style: none;
+        padding: 0 12px;
+        max-height: 100%;
+        overflow-y: auto;
+        overflow-x: static;
+      }
+
+      li {
+        display: inline-block;
+        padding: 0;
+        background-color: var(--note-fill-color);
+        padding: 6px 8px;
+        font-size: 13px;
+        font-weight: bold;
+        margin: 3px 0;
+        color: #222;
+        font-weight: 200;
+        box-shadow: 0 0 5px rgba(0,0,0,0.15);
+        outline: none;
+      }
+
+      li[data-segment] {
+        color: var(--note-fill-color);
+        background-color: #222;
+        cursor: pointer;
+        user-select: none;
+        width: 26px;
+        text-align: center;
+      }
+    </style>
+    <div id="container">
+      <div class="row" id="top-row">
+        <div class="column two-third">
+        <section
+          data-label="problem"
+          data-segment="problems"
+          data-info="list your top 1-3 problems."
+        >
+          <ul class="list">
+            <dom-repeat items="[[problems]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="problems" on-tap="addItem">+</li>
+          </ul>
+        </section>
+        <section
+          data-label="existing alternatives"
+          data-segment="alternatives"
+          data-info="list how these problems are solved today."
+        >
+          <ul class="list">
+            <dom-repeat items="[[alternatives]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="alternatives" on-tap="addItem">+</li>
+          </ul>
+        </section>
+        </div>
+        <div class="column">
+          <section
+            data-label="solution"
+            data-segment="solutions"
+            data-info="Outline a possible solution for each problem."
+          >
+          <ul class="list">
+            <dom-repeat items="[[solutions]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="solutions" on-tap="addItem">+</li>
+          </ul>
+          </section>
+          <section
+            data-label="key metrics"
+            data-segment="keyMetrics"
+            data-info="List the key numbers that tell you how your business is doing."
+          >
+          <ul class="list">
+            <dom-repeat items="[[keyMetrics]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="keyMetrics" on-tap="addItem">+</li>
+          </ul>
+          </section>
+        </div>
+        <div class="column two-third">
+          <section
+            data-label="unique value proposition"
+            data-segment="uniqueValuePropositions"
+            data-info="Single, clear, compelling message that states why you are different and worth paying attention."
+          >
+          <ul class="list">
+            <dom-repeat items="[[uniqueValuePropositions]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="uniqueValuePropositions" on-tap="addItem">+</li>
+          </ul>
+          </section>
+          <section
+              data-label="high level concept"
+              data-segment="highLevelConcepts"
+              data-info="List your X for Y analogy e.g. Youtube = Flickr for videos."
+          >
+          <ul class="list">
+            <dom-repeat items="[[highLevelConcepts]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="highLevelConcepts" on-tap="addItem">+</li>
+          </ul>
+          </section>
+        </div>
+        <div class="column">
+          <section
+            data-label="unfair advantage"
+            data-segment="unfairAdvantages"
+            data-info="Something that cannot easily be bought or copied."
+          >
+          <ul class="list">
+            <dom-repeat items="[[unfairAdvantages]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="unfairAdvantages" on-tap="addItem">+</li>
+          </ul>
+          </section>
+          <section
+            data-label="channels"
+            data-segment="channels"
+            data-info="List your path to customers (inbound or outbound)."
+          >
+          <ul class="list">
+            <dom-repeat items="[[channels]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="channels" on-tap="addItem">+</li>
+          </ul>
+          </section>
+        </div>
+        <section
+          data-label="customer segments"
+          data-segment="customerSegments"
+          data-info="List your target customers and users."
+        >
+          <ul class="list">
+            <dom-repeat items="[[customerSegments]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="customerSegments" on-tap="addItem">+</li>
+          </ul>
+        </section>
+        </div>
+      <div class="row" id="bottom-row">
+        <section
+          data-label="cost structure"
+          data-segment="costStructures"
+          data-info="List your fixed and variable costs."
+        >
+          <ul class="list">
+            <dom-repeat items="[[costStructures]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="costStructures" on-tap="addItem">+</li>
+          </ul>
+        </section>
+        <section
+          data-label="revenue streams"
+          data-segment="revenueStreams"
+          data-info="List your sources of revenue."
+        >
+          <ul class="list">
+            <dom-repeat items="[[revenueStreams]]">
+              <template>
+                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+              </template>
+            </dom-repeat>
+            <li data-segment="revenueStreams" on-tap="addItem">+</li>
+          </ul>
+        </section>
+        </div>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * `lean-canvas`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class LeanCanvas extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() { return 'lean-canvas'; }
+      static get properties() {
+        return {
+          
+          problems: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          alternatives: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          solutions: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          keyMetrics: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          uniqueValuePropositions: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          highLevelConcepts: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          unfairAdvantages: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          channels: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          customerSegments: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          earlyAdopters: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          costStructures: {
+            type: Array,
+            value: [],
+            notify: true,
+          },
+
+          revenueStreams: {
+            type: Array,
+            value: [],
+            notify: true,
+          }
+
+        };
+      }
+
+      addItem(evt) {
+        let segment = evt.target.dataset.segment;
+        this.push(segment, {text: 'It\'s sticky!'})
+      }
+
+      updateItem(evt) {
+        let segment = evt.target.parentNode.parentNode.dataset.segment;
+        let text = evt.target.textContent;
+        let index = evt.model.index;
+        let items = this[segment].filter((item, i) => {return i !== index});
+        if(text.length > 0) return this.splice(segment, index, 1, {text: text})
+        this.set(segment, []);
+        window.requestAnimationFrame(() => {
+          return this.set(segment, items)
+        });
+      }
+
+    }
+
+    window.customElements.define(LeanCanvas.is, LeanCanvas);
+  </script>
+</dom-module>

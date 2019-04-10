@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>lean-canvas demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="../lean-canvas.html">
+
+    <custom-style>
+      <style is="custom-style">
+        lean-canvas {
+          position: fixed;
+          top: 12px;
+          left: 12px;
+          right: 12px;
+          bottom: 12px;
+          --border-color: #222;
+        }
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <lean-canvas id="canvas"
+    ></lean-canvas>
+
+    <script>
+      const storage = window.localStorage;
+      
+      let problems = storage.getItem('problems');
+      canvas.problems = problems ? JSON.parse(problems) : [{"text": "Taxis are expensive"}, {"text": "Taxis are unsafe"}];
+
+      let alternatives = storage.getItem('alternatives');
+      canvas.alternatives = alternatives ? JSON.parse(alternatives) : [{"text": "Public transport"}, {"text": "Classic taxi services"}];
+
+      let solutions = storage.getItem('solutions');
+      canvas.solutions = solutions ? JSON.parse(solutions) : [{"text": "Cheaper rides"}, {"text": "Know your driver"}];
+
+      let keyMetrics = storage.getItem('keyMetrics');
+      canvas.keyMetrics = keyMetrics ? JSON.parse(keyMetrics) : [{"text": "Number of rides"}, {"text": "Number of customers"}];
+
+      let uniqueValuePropositions = storage.getItem('uniqueValuePropositions');
+      canvas.uniqueValuePropositions = uniqueValuePropositions ? JSON.parse(uniqueValuePropositions) : [{"text": "A taxi service app which allows you to quickly find highly rated affordable drives nearby"}];
+
+      let highLevelConcepts = storage.getItem('highLevelConcepts');
+      canvas.highLevelConcepts = highLevelConcepts ? JSON.parse(highLevelConcepts) : [{"text": "Uber = Tinder for taxis"}];
+
+      let unfairAdvantages = storage.getItem('unfairAdvantages');
+      canvas.unfairAdvantages = unfairAdvantages ? JSON.parse(unfairAdvantages) : [];
+
+      let channels = storage.getItem('channels');
+      canvas.channels = channels ? JSON.parse(channels) : [{"text": "Word of mouth"}, {"text": "PR"}];
+
+      let customerSegments = storage.getItem('customerSegments');
+      canvas.customerSegments = customerSegments ? JSON.parse(customerSegments) : [{"text": "Passengers"}, {"text": "Drivers"}];
+
+      let earlyAdopters = storage.getItem('earlyAdopters');
+      canvas.earlyAdopters = earlyAdopters ? JSON.parse(earlyAdopters) : [{"text": "Bus / subway users"}, {"text": "Classic Taxi drivers"}];
+
+      let costStructures = storage.getItem('costStructures');
+      canvas.costStructures = costStructures ? JSON.parse(costStructures) : [{"text": "Marketing"}, {"text": "Salaries"}, {"text": "Product development"}];
+
+      let revenueStreams = storage.getItem('revenueStreams');
+      canvas.revenueStreams = revenueStreams ? JSON.parse(revenueStreams) : [{"text": "25% of the pay for each ride"}];
+
+      canvas.addEventListener('problems-changed', (evt) => {
+        storage.setItem('problems', JSON.stringify(evt.target.problems));
+      })
+      canvas.addEventListener('alternatives-changed', (evt) => {
+        storage.setItem('alternatives', JSON.stringify(evt.target.alternatives));
+      })
+      canvas.addEventListener('solutions-changed', (evt) => {
+        storage.setItem('solutions', JSON.stringify(evt.target.solutions));
+      })
+      canvas.addEventListener('key-metrics-changed', (evt) => {
+        storage.setItem('keyMetrics', JSON.stringify(evt.target.keyMetrics));
+      })
+      canvas.addEventListener('unique-value-propositions-changed', (evt) => {
+        storage.setItem('uniqueValuePropositions', JSON.stringify(evt.target.uniqueValuePropositions));
+      })
+      canvas.addEventListener('high-level-concepts-changed', (evt) => {
+        storage.setItem('highLevelConcepts', JSON.stringify(evt.target.highLevelConcepts));
+      })
+      canvas.addEventListener('unfair-advantages-changed', (evt) => {
+        storage.setItem('unfairAdvantages', JSON.stringify(evt.target.unfairAdvantages));
+      })
+      canvas.addEventListener('channels-changed', (evt) => {
+        storage.setItem('channels', JSON.stringify(evt.target.channels));
+      })
+      canvas.addEventListener('customer-segments-changed', (evt) => {
+        storage.setItem('customerSegments', JSON.stringify(evt.target.customerSegments));
+      })
+      canvas.addEventListener('early-adopters-changed', (evt) => {
+        storage.setItem('earlyAdopters', JSON.stringify(evt.target.earlyAdopters));
+      })
+      canvas.addEventListener('cost-structures-changed', (evt) => {
+        storage.setItem('costStructures', JSON.stringify(evt.target.costStructures));
+      })
+      canvas.addEventListener('revenue-streams-changed', (evt) => {
+        storage.setItem('revenueStreams', JSON.stringify(evt.target.revenueStreams));
+      })
+    </script>
+
+  </body>
+</html>
