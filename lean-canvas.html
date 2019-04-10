@@ -387,6 +387,7 @@
 
       addItem(evt) {
         let segment = evt.target.dataset.segment;
+        if(!this[segment]) return this.set(segment, [{text: 'It\'s sticky!'}]);
         this.push(segment, {text: 'It\'s sticky!'})
       }
 
