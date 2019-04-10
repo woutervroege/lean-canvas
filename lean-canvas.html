@@ -244,20 +244,36 @@
           </ul>
           </section>
         </div>
-        <section
-          data-label="customer segments"
-          data-segment="customerSegments"
-          data-info="List your target customers and users."
-        >
-          <ul class="list">
-            <dom-repeat items="[[customerSegments]]">
-              <template>
-                <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
-              </template>
-            </dom-repeat>
-            <li data-segment="customerSegments" on-tap="addItem">+</li>
-          </ul>
-        </section>
+        <div class="column two-third">
+          <section
+            data-label="customer segments"
+            data-segment="customerSegments"
+            data-info="List your target customers and users."
+          >
+            <ul class="list">
+              <dom-repeat items="[[customerSegments]]">
+                <template>
+                  <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+                </template>
+              </dom-repeat>
+              <li data-segment="customerSegments" on-tap="addItem">+</li>
+            </ul>
+          </section>
+          <section
+            data-label="early adopters"
+            data-segment="earlyAdopters"
+            data-info="List the characteristics of your ideal customers."
+          >
+            <ul class="list">
+              <dom-repeat items="[[earlyAdopters]]">
+                <template>
+                  <li contenteditable="" on-blur="updateItem">[[item.text]]</li>
+                </template>
+              </dom-repeat>
+              <li data-segment="earlyAdopters" on-tap="addItem">+</li>
+            </ul>
+          </section>
+          </div>
         </div>
       <div class="row" id="bottom-row">
         <section
